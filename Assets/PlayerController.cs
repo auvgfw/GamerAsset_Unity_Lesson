@@ -16,6 +16,7 @@ public class PlayerController : MonoBehaviour
     Vector3 lastPos;
     void Start()
     {
+        //transform.position = new Vector3(5, 0, 5);
         Animal = transform.GetChild(0).gameObject;
         anim = Animal.GetComponent<Animator>();
 
@@ -46,12 +47,10 @@ public class PlayerController : MonoBehaviour
         mySequence = DOTween.Sequence();
 
         int i;
-        for (i = 0; i <4; i++)
+        for (i = 0; i <36; i++)
         {
-            Go(2);
-            Turn(90);
-            Go(2);
-            Turn(-90);
+            Go(1);
+            Turn(10);
 
         }
     }
@@ -59,6 +58,7 @@ public class PlayerController : MonoBehaviour
     
     void Go(float grid=1.0f)
     {
+        /*
         
         if (nextrot.y%360 == 0)
         {
@@ -76,17 +76,27 @@ public class PlayerController : MonoBehaviour
         {
             nextpos.x-=grid;
         }
+        */
+
+        nextpos.x +=Mathf.Sin(nextrot.y*Mathf.PI/180) * grid;
+        nextpos.z += Mathf.Cos(nextrot.y*Mathf.PI/180) * grid;
+
+
         mySequence.Append(transform.DOMove(nextpos, Mathf.Abs(grid) *speed));
     }
     void Turn(float degree=90.0f)
     {
+        float rotspeed;
+        rotspeed = Mathf.Abs(degree)/90.0f * 0.5f;
         while(degree<0)
         {
             degree += 360;
         }
         nextrot.y += degree;
 
-        mySequence.Append(transform.DORotate(nextrot, 0.5f));
+
+
+        mySequence.Append(transform.DORotate(nextrot, rotspeed));
     }
     void ResetPos()
     {
