@@ -9,11 +9,15 @@ public class PlayerController : MonoBehaviour
 
     public Transform OriginalPos;
     GameObject Animal;
+    Animator anim;
     Vector3 nextpos,nextrot;
     Sequence mySequence;
+    float speed = 0.5f;
     void Start()
     {
         Animal = transform.GetChild(0).gameObject;
+        anim = Animal.GetComponent<Animator>();
+
     }
 
     // Update is called once per frame
@@ -26,58 +30,51 @@ public class PlayerController : MonoBehaviour
     {
         nextpos = transform.position;
         nextrot = transform.eulerAngles;
+        anim.Play("Base Layer.walk");
         mySequence = DOTween.Sequence();
 
         int i;
-        Go();
-        for (i = 0; i < 10; i++)
+        for (i = 0; i <4; i++)
         {
-            
-            Turn();
-            Go();
+            Go(2);
+            Turn(90);
+            Go(2);
+            Turn(-90);
+
         }
     }
     
     
-    void Go()
+    void Go(float grid=1.0f)
     {
-        if (nextrot.y == 0)
+        
+        if (nextrot.y%360 == 0)
         {
-            nextpos.z++;
+            nextpos.z += grid; ;
         }
-        if (nextrot.y == 90)
+        if (nextrot.y%360 == 90)
         {
-            nextpos.x++;
+            nextpos.x+=grid;
         }
-        if (nextrot.y == 180)
+        if (nextrot.y%360 == 180)
         {
-            nextpos.z--;
+            nextpos.z-=grid;
         }
-        if (nextrot.y == 270)
+        if (nextrot.y%360 == 270)
         {
-            nextpos.x--;
+            nextpos.x-=grid;
         }
-        mySequence.Append(transform.DOMove(nextpos,1));
+        mySequence.Append(transform.DOMove(nextpos, Mathf.Abs(grid) *speed));
     }
-    void Turn()
+    void Turn(float degree=90.0f)
     {
-        if (nextrot.y == 0)
+        while(degree<0)
         {
-            nextrot.y = 90;
+            degree += 360;
         }
-        else if (nextrot.y == 90)
-        {
-            nextrot.y=180;
-        }
-        else if (nextrot.y == 180)
-        {
-            nextrot.y=270;
-        }
-        else if (nextrot.y == 270)
-        {
-            nextrot.y=0;
-        }
-        mySequence.Append(transform.DORotate(nextrot, 1));
+        nextrot.y += degree;
+
+        mySequence.Append(transform.DORotate(nextrot, 0.5f));
     }
     void ResetPos()
     {
