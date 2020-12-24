@@ -13,6 +13,7 @@ public class PlayerController : MonoBehaviour
     Vector3 nextpos,nextrot;
     Sequence mySequence;
     float speed = 0.5f;
+    Vector3 lastPos;
     void Start()
     {
         Animal = transform.GetChild(0).gameObject;
@@ -23,6 +24,18 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (Equals(lastPos, transform.position) == false)
+        {
+            anim.ResetTrigger("Idle");
+            anim.SetTrigger("Walk");
+
+        }
+        else
+        {
+            anim.ResetTrigger("Walk");
+            anim.SetTrigger("Idle");
+        }
+        lastPos = transform.position;
 
     }
 
@@ -30,7 +43,6 @@ public class PlayerController : MonoBehaviour
     {
         nextpos = transform.position;
         nextrot = transform.eulerAngles;
-        anim.Play("Base Layer.walk");
         mySequence = DOTween.Sequence();
 
         int i;
